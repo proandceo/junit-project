@@ -13,8 +13,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Book {
-    @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
     @Column(length = 50, nullable = false)
