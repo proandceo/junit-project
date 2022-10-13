@@ -4,10 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest //DB와 관련된 컴포넌트만 메모리에 로딩
 public class BookRepositoryTest {
@@ -71,4 +73,22 @@ public class BookRepositoryTest {
     }
     // 4. 책 수정
     // 5. 책 삭제
+    @Test
+    public void deleteTest(){
+        //given
+        Long id = 1L;
+        //when
+        try {
+            bookRepository.deleteById(id);
+        }catch( EmptyResultDataAccessException ex){
+            assertTrue(true, "해당 데이터가 없습니다.");
+        }
+        //then
+        Optional<Book> book = bookRepository.findById(id);
+        assertTrue(book.isEmpty(), "데이터가 없습니다.");
+
+
+    }
+
+
 }
