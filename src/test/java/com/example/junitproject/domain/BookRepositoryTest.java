@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +60,7 @@ public class BookRepositoryTest {
         assertEquals(author, bookList.get(0).getAuthor());
     }
     // 3. 책 한건 보기
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void checkOneListTest(){
         //given
@@ -72,7 +74,32 @@ public class BookRepositoryTest {
 
     }
     // 4. 책 수정
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void alterTest(){
+        //given
+        Long id = 1L;
+
+        Book book1 = Book.builder()
+                .id(id)
+                .title("JUNIT0")
+                .author("코딩")
+                .build();
+        //when
+        Book book = bookRepository.save(book1);
+
+        //then
+        assertEquals(book1.getId(), book.getId());
+        assertEquals(book1.getTitle(), book.getTitle());
+        assertEquals(book1.getAuthor(), book.getAuthor());
+//        bookRepository.findAll().stream()
+//                .forEach(book2 -> System.out.println("TITLE:" + book.getId()
+//                        + ":" +book.getTitle() + ":"
+//                        + book.getAuthor()));
+    }
+
     // 5. 책 삭제
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void deleteTest(){
         //given
@@ -86,9 +113,5 @@ public class BookRepositoryTest {
         //then
         Optional<Book> book = bookRepository.findById(id);
         assertTrue(book.isEmpty(), "데이터가 없습니다.");
-
-
     }
-
-
 }
