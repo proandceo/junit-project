@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,5 +28,14 @@ public class BookService {
         return bookRepository.findAll().stream()
                 .map(new BookRespDto()::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public BookRespDto listOneBook(Long id) {
+        Optional<Book> bookOp = bookRepository.findById(id);
+        if (bookOp.isPresent()) {
+            return new BookRespDto().toDto(bookOp.get());
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
     }
 }
